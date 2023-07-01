@@ -1,0 +1,9 @@
+Currently in ALPHA.
+
+Ever wanted to know how much damage you've dealt over your player's career? Or maybe how many times you've jumped, dashed, or dodged? Well this is the mod for you!
+
+This mod tracks several different statistics for each player, with more to be added as the mod gets updated.
+
+Opening the statistic menu defaults to the "O" key. Can be changed in the controls menu.
+
+Note: This mod MUST be enabled in order to ensure up-to-date statistics. Vanilla doesn't track these statistics on its own, so this mod has to do it. Your stats will NOT update or be tracked without this mod enabled!

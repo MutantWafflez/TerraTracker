@@ -1,0 +1,4 @@
+displayName = Terrarian's Tracker [ALPHA]
+author = MutantWafflez (Terry)
+version = 0.1
+buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*, .idea\*, *.md, *.sln, *.gitignore

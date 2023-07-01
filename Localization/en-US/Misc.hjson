@@ -1,0 +1,10 @@
+Mods.TerraTracker: {
+
+	Keybind: {
+		ToggleTrackerUI: "Toggle TerraTracker UI"
+	}
+
+	Misc: {
+		NothingCrafted: "Nothing Crafted Yet"
+	}
+}

@@ -1,0 +1,69 @@
+Mods.TerraTracker: {
+
+	PageName: {
+		PlayerCombatPage: "Combat"
+		PlayerMovementPage: "Movement"
+		PlayerExplorationPage: "Exploration & Building"
+		PlayerCraftingPage: "Crafting"
+		PlayerFishingPage: "Fishing"
+		PlayerSocialPage: "Vendor & NPC Interactions"
+	}
+
+	Stat: {
+		// Combat Stats
+		StatAmmoConsumed: "Ammunition Consumed"
+		StatBuffItemsConsumed: "Buff Items Consumed"
+		StatCritsDealt: "Critical Strikes"
+		StatDamageBlocked: "Damage Blocked"
+		StatDamageDealt: "Damage Dealt"
+		StatDamageReceived: "Damage Received"
+		StatDeaths: "Deaths"
+		StatDodges: "Dodges"
+		StatFoodsConsumed: "Foods Consumed"
+		StatHealingItemsConsumed: "Healing Items Consumed"
+		StatImmuneTime: "Total Immune Time"
+		StatLongestLife: "Longest Life"
+		StatMagicDamageDealt: "Damage Dealt (Magic)"
+		StatManaItemsConsumed: "Mana Items Consumed"
+		StatMeleeDamageDealt: "Damage Dealt (Melee)"
+		StatProjsFired: "Projectiles Created"
+		StatRangedDamageDealt: "Damage Dealt (Ranged)"
+		StatSummonDamageDealt: "Damage Dealt (Summon)"
+
+		// Crafting Stats
+		StatBuffCraftCount: "Buff Items Crafted"
+		StatCraftCount: "Items Crafted"
+		StatMostCrafted: "Most Crafted Item"
+
+		// Exploration Stats
+		StatBlocksMined: "Blocks Mined"
+		StatBlocksPlaced: "Blocks Placed"
+
+		// Fishing Stats
+		StatCratesCaught: "Crates Caught"
+		StatEnemiesCaught: "Enemies Caught"
+		StatLinesBroken: "Lines Snapped"
+		StatQuestFishCaught: "Quest Fish Caught"
+		StatThingsCaught: "Total Things Caught"
+		StatTrashCaught: "Trash Caught"
+
+		// Movement Stats
+		StatBlocksAirborne: "Blocks Traveled (Airborne)"
+		StatBlocksFallen: "Blocks Fallen"
+		StatBlocksWalked: "Blocks Traveled (Grounded)"
+		StatDashes: "Dashes"
+		StatJumps: "Jumps"
+		StatMaxSpeed: "Fastest Speed (blocks/sec)"
+
+		// Social Stats
+		StatDyeTrades: "Dye Trades"
+		StatItemsBought: "Items Bought"
+		StatItemsSold: "Items Sold"
+		StatMoneySold: "Money Earned By Selling"
+		StatMoneySpent: "Money Spent"
+		StatNPCChats: "NPC Chats"
+		StatNurseHeals: "Nurse Heals"
+		StatReforges: "Reforges"
+		StatTaxesCollected: "Taxes Collected"
+	}
+}
