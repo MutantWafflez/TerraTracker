@@ -13,32 +13,28 @@ namespace TerraTracker.Common.GlobalItems {
     /// Global Item that handles item statistic tracking.
     /// </summary>
     public class TrackerGlobalItem : GlobalItem {
-        public override bool? UseItem(Item item, Player player) {
+        public override bool ConsumeItem(Item item, Player player) {
             if (Main.myPlayer != player.whoAmI) {
-                return null;
+                return base.ConsumeItem(item, player);
             }
 
-            if (player.ItemTimeIsZero) {
-                if (item.healLife > 0) {
-                    TrackedStat.AddUInt<StatHealingItemsConsumed>();
-                }
-
-                if (item.healMana > 0) {
-                    TrackedStat.AddUInt<StatManaItemsConsumed>();
-                }
-
-                if (item.buffType > 0) {
-                    if (ItemID.Sets.IsFood[item.type]) {
-                        TrackedStat.AddUInt<StatFoodsConsumed>();
-                    }
-
-                    TrackedStat.AddUInt<StatBuffItemsConsumed>();
-                }
-
-                return true;
+            if (item.healLife > 0) {
+                TrackedStat.AddUInt<StatHealingItemsConsumed>();
             }
 
-            return null;
+            if (item.healMana > 0) {
+                TrackedStat.AddUInt<StatManaItemsConsumed>();
+            }
+
+            if (item.buffType > 0) {
+                if (ItemID.Sets.IsFood[item.type]) {
+                    TrackedStat.AddUInt<StatFoodsConsumed>();
+                }
+
+                TrackedStat.AddUInt<StatBuffItemsConsumed>();
+            }
+
+            return base.ConsumeItem(item, player);
         }
 
         public override void OnCreate(Item item, ItemCreationContext context) {

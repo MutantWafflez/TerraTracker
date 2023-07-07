@@ -1,1 +1,3 @@
-Released the mod in alpha!
+ALPHA RELEASE 0.1.1 [Consumption Fix]
+Fixes:
+* Fixed bug where attempting to use placeables in the air (where they shouldn't be consumed) actually consume them
