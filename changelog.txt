@@ -1,3 +1,3 @@
-ALPHA RELEASE 0.1.2 [It's .4 NOT .3!] (August 28th, 2025)
+ALPHA RELEASE 0.1.3 [To The Client Side] (August 28th, 2025)
 Changes:
-* Updated the mod to tML 1.4.4 (Sorry about the wait)
+* Mod is now considered client sided, as it has no functionality for a server if it were to be installed
