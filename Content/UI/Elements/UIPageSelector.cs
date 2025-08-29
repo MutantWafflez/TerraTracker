@@ -5,7 +5,6 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.UI;
 using TerraTracker.Common.Systems;
 
@@ -56,7 +55,7 @@ public class UIPageSelector : UIElement {
         base.Update(gameTime);
 
         if (IsMouseHovering) {
-            Main.instance.MouseText(UISystem.Instance.trackerPages[_myTrackerIndex].PageName.GetTranslation(Language.ActiveCulture));
+            Main.instance.MouseText(UISystem.Instance.trackerPages[_myTrackerIndex].PageName.Value);
         }
 
         _backPanel.BackgroundColor = (UISystem.Instance.GetPageIndex() == _myTrackerIndex ? Color.Yellow : new Color(63, 82, 151)) * 0.7f;

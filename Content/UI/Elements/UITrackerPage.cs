@@ -2,12 +2,13 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.GameContent.UI.Elements;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 using TerraTracker.Common.ModTypes;
 using TerraTracker.Common.Systems;
 
-namespace TerraTracker.Content.UI.Elements; 
+namespace TerraTracker.Content.UI.Elements;
 
 /// <summary>
 ///     A "page" that holds all the statistics for a certain category of data. (Player stats,
@@ -26,7 +27,7 @@ public abstract class UITrackerPage : UIElement, ILoadable {
     ///     The name of this page that will be shown to the user. Localization path defaults to Mod Path +  "PageName" + Internal
     ///     Name
     /// </summary>
-    public virtual ModTranslation PageName => LocalizationLoader.GetOrCreateTranslation(Mod, "PageName." + InternalName);
+    public virtual LocalizedText PageName => Language.GetText($"Mods.TerraTracker.PageName.{InternalName}");
 
     public bool IsInitialized {
         get;
