@@ -1,13 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\tModLoader.targets" />
+  
+  <PropertyGroup>
+    <DotNetPath Condition=" '$(OS)' == 'Windows_NT' ">dotnet.exe</DotNetPath>
+    <DotNetPath Condition=" '$(OS)' == 'Unix' ">dotnet/dotnet</DotNetPath>
+    <DotNetPath Condition=" '$(DotNetPath)' == '' ">dotnet/dotnet</DotNetPath>
+  </PropertyGroup>
+  
   <PropertyGroup>
     <AssemblyName>TerraTracker</AssemblyName>
-    <TargetFramework>net6.0</TargetFramework>
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="tModLoader.CodeAssist" Version="0.1.*" />
   </ItemGroup>
 </Project>
