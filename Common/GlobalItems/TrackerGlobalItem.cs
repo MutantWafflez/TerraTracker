@@ -8,96 +8,94 @@ using TerraTracker.Content.TrackedStats.Crafting;
 using TerraTracker.Content.TrackedStats.Fishing;
 using TerraTracker.Content.TrackedStats.Social;
 
-namespace TerraTracker.Common.GlobalItems {
-    /// <summary>
-    /// Global Item that handles item statistic tracking.
-    /// </summary>
-    public class TrackerGlobalItem : GlobalItem {
-        public override bool ConsumeItem(Item item, Player player) {
-            if (Main.myPlayer != player.whoAmI) {
-                return base.ConsumeItem(item, player);
-            }
+namespace TerraTracker.Common.GlobalItems; 
 
-            if (item.healLife > 0) {
-                TrackedStat.AddUInt<StatHealingItemsConsumed>();
-            }
-
-            if (item.healMana > 0) {
-                TrackedStat.AddUInt<StatManaItemsConsumed>();
-            }
-
-            if (item.buffType > 0) {
-                if (ItemID.Sets.IsFood[item.type]) {
-                    TrackedStat.AddUInt<StatFoodsConsumed>();
-                }
-
-                TrackedStat.AddUInt<StatBuffItemsConsumed>();
-            }
-
+/// <summary>
+///     Global Item that handles item statistic tracking.
+/// </summary>
+public class TrackerGlobalItem : GlobalItem {
+    public override bool ConsumeItem(Item item, Player player) {
+        if (Main.myPlayer != player.whoAmI) {
             return base.ConsumeItem(item, player);
         }
 
-        public override void OnCreate(Item item, ItemCreationContext context) {
-            if (context is RecipeCreationContext recipeContext) {
-                Item createItem = recipeContext.recipe.createItem;
-
-                TrackedStat.AddUInt<StatCraftCount>((uint)createItem.stack);
-
-                StatMostCrafted mostCraftedStat = ModContent.GetInstance<StatMostCrafted>();
-                string craftKey = createItem.ModItem is null ? createItem.type.ToString() : createItem.ModItem.FullName;
-                if (!mostCraftedStat.craftCounts.TryAdd(craftKey, (uint)createItem.stack)) {
-                    mostCraftedStat.craftCounts[craftKey] += (uint)createItem.stack;
-                }
-
-                if (createItem.buffTime > 0) {
-                    TrackedStat.AddUInt<StatBuffCraftCount>((uint)createItem.stack);
-                }
-            }
+        if (item.healLife > 0) {
+            TrackedStat.AddUInt<StatHealingItemsConsumed>();
         }
 
-        public override void OnSpawn(Item item, IEntitySource source) {
-            if (item.IsACoin && source is EntitySource_Gift { Entity: NPC { type: NPCID.TaxCollector } npc } && Main.LocalPlayer.talkNPC == npc.type) {
-                long value = 0;
-                switch (item.type) {
-                    case ItemID.PlatinumCoin:
-                        value += Item.platinum;
-                        break;
-                    case ItemID.GoldCoin:
-                        value += Item.gold;
-                        break;
-                    case ItemID.SilverCoin:
-                        value += Item.silver;
-                        break;
-                    default:
-                        value += Item.copper;
-                        break;
-                }
-                value *= item.stack;
-
-                TrackedStat.AddLong<StatTaxesCollected>(value);
-            }
+        if (item.healMana > 0) {
+            TrackedStat.AddUInt<StatManaItemsConsumed>();
         }
 
-        public override void CaughtFishStack(int type, ref int stack) {
-            Item caughtItem = new(type);
-
-            TrackedStat.AddUInt<StatThingsCaught>();
-
-            if (ItemID.Sets.IsFishingCrate[caughtItem.type] || ItemID.Sets.IsFishingCrateHardmode[caughtItem.type]) {
-                TrackedStat.AddUInt<StatCratesCaught>();
-            }
-
-            if (caughtItem.rare == ItemRarityID.Gray) {
-                TrackedStat.AddUInt<StatTrashCaught>();
-            }
-
-            if (caughtItem.questItem) {
-                TrackedStat.AddUInt<StatQuestFishCaught>();
-            }
+        if (item.buffType <= 0) {
+            return base.ConsumeItem(item, player);
         }
 
-        public override void PostReforge(Item item) {
-            TrackedStat.AddUInt<StatReforges>();
+        if (ItemID.Sets.IsFood[item.type]) {
+            TrackedStat.AddUInt<StatFoodsConsumed>();
         }
+
+        TrackedStat.AddUInt<StatBuffItemsConsumed>();
+
+        return base.ConsumeItem(item, player);
+    }
+
+    public override void OnCreated(Item item, ItemCreationContext context) {
+        if (context is not RecipeItemCreationContext recipeContext) {
+            return;
+        }
+
+        Item createItem = recipeContext.Recipe.createItem;
+
+        TrackedStat.AddUInt<StatCraftCount>((uint)createItem.stack);
+
+        StatMostCrafted mostCraftedStat = ModContent.GetInstance<StatMostCrafted>();
+        string craftKey = createItem.ModItem is null ? createItem.type.ToString() : createItem.ModItem.FullName;
+        if (!mostCraftedStat.craftCounts.TryAdd(craftKey, (uint)createItem.stack)) {
+            mostCraftedStat.craftCounts[craftKey] += (uint)createItem.stack;
+        }
+
+        if (createItem.buffTime > 0) {
+            TrackedStat.AddUInt<StatBuffCraftCount>((uint)createItem.stack);
+        }
+    }
+
+    public override void OnSpawn(Item item, IEntitySource source) {
+        if (!item.IsACoin || source is not EntitySource_Gift { Entity: NPC { type: NPCID.TaxCollector } npc } || Main.LocalPlayer.talkNPC != npc.type) {
+            return;
+        }
+
+        long value = 0;
+        value += item.type switch {
+            ItemID.PlatinumCoin => Item.platinum,
+            ItemID.GoldCoin => Item.gold,
+            ItemID.SilverCoin => Item.silver,
+            _ => Item.copper
+        };
+        value *= item.stack;
+
+        TrackedStat.AddLong<StatTaxesCollected>(value);
+    }
+
+    public override void CaughtFishStack(int type, ref int stack) {
+        Item caughtItem = new(type);
+
+        TrackedStat.AddUInt<StatThingsCaught>();
+
+        if (ItemID.Sets.IsFishingCrate[caughtItem.type] || ItemID.Sets.IsFishingCrateHardmode[caughtItem.type]) {
+            TrackedStat.AddUInt<StatCratesCaught>();
+        }
+
+        if (caughtItem.rare == ItemRarityID.Gray) {
+            TrackedStat.AddUInt<StatTrashCaught>();
+        }
+
+        if (caughtItem.questItem) {
+            TrackedStat.AddUInt<StatQuestFishCaught>();
+        }
+    }
+
+    public override void PostReforge(Item item) {
+        TrackedStat.AddUInt<StatReforges>();
     }
 }

@@ -3,11 +3,11 @@ using ReLogic.Content;
 using Terraria.ID;
 using TerraTracker.Content.UI.Elements;
 
-namespace TerraTracker.Content.UI.TrackerPages {
-    /// <summary>
-    /// Page that displays movement related data for a player.
-    /// </summary>
-    public class PlayerMovementPage : UITrackerPage {
-        public override Asset<Texture2D> PageIcon => TerraTracker.GetIcon(ItemID.HermesBoots);
-    }
+namespace TerraTracker.Content.UI.TrackerPages; 
+
+/// <summary>
+///     Page that displays movement related data for a player.
+/// </summary>
+public class PlayerMovementPage : UITrackerPage {
+    public override Asset<Texture2D> PageIcon => TerraTracker.GetIcon(ItemID.HermesBoots);
 }

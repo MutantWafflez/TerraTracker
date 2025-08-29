@@ -1,28 +1,28 @@
-﻿using On.Terraria.GameContent.Achievements;
+﻿using Terraria.GameContent.Achievements;
 using Terraria.ID;
 using TerraTracker.Common.ModTypes;
 
-namespace TerraTracker.Content.TrackedStats.Exploration {
-    /// <summary>
-    /// Tracks how many singular blocks a player has broken/mined.
-    /// </summary>
-    public class StatBlocksMined : TrackedStat {
-        public override string ParentPage => "PlayerExplorationPage";
+namespace TerraTracker.Content.TrackedStats.Exploration;
 
-        public override void SetStaticDefaults() {
-            statIcon = TerraTracker.GetIcon(ItemID.CopperPickaxe);
-        }
+/// <summary>
+///     Tracks how many singular blocks a player has broken/mined.
+/// </summary>
+public class StatBlocksMined : TrackedStat {
+    public override string ParentPage => "PlayerExplorationPage";
 
-        public override void Load() {
-            base.Load();
+    public override void SetStaticDefaults() {
+        statIcon = TerraTracker.GetIcon(ItemID.CopperPickaxe);
+    }
 
-            AchievementsHelper.HandleMining += OnTileMined;
-        }
+    public override void Load() {
+        base.Load();
 
-        private void OnTileMined(AchievementsHelper.orig_HandleMining orig) {
-            orig();
+        On_AchievementsHelper.HandleMining += OnTileMined;
+    }
 
-            theStat.uintStat++;
-        }
+    private void OnTileMined(On_AchievementsHelper.orig_HandleMining orig) {
+        orig();
+
+        theStat.uintStat++;
     }
 }

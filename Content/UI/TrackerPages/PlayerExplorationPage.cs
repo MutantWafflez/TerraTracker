@@ -3,11 +3,11 @@ using ReLogic.Content;
 using Terraria.ID;
 using TerraTracker.Content.UI.Elements;
 
-namespace TerraTracker.Content.UI.TrackerPages {
-    /// <summary>
-    /// Page that displays data related to a player's adventures around a world.
-    /// </summary>
-    public class PlayerExplorationPage : UITrackerPage {
-        public override Asset<Texture2D> PageIcon => TerraTracker.GetIcon(ItemID.Torch);
-    }
+namespace TerraTracker.Content.UI.TrackerPages;
+
+/// <summary>
+///     Page that displays data related to a player's adventures around a world.
+/// </summary>
+public class PlayerExplorationPage : UITrackerPage {
+    public override Asset<Texture2D> PageIcon => TerraTracker.GetIcon(ItemID.Torch);
 }

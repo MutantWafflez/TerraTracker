@@ -2,40 +2,40 @@
 using Terraria.ModLoader.IO;
 using TerraTracker.Common.ModTypes;
 
-namespace TerraTracker.Content.TrackedStats.Combat {
+namespace TerraTracker.Content.TrackedStats.Combat; 
+
+/// <summary>
+///     Tracks the longest time a player has stayed alive without dying in terms of game ticks.
+/// </summary>
+public class StatLongestLife : TrackedStat {
     /// <summary>
-    /// Tracks the longest time a player has stayed alive without dying in terms of game ticks.
+    ///     How long a player has been alive for THIS specific life.
     /// </summary>
-    public class StatLongestLife : TrackedStat {
-        public override string ParentPage => "PlayerCombatPage";
+    public uint currentLifeTime;
 
-        private string CurrentLifeIOString => $"{Mod.Name}/CurrentLifeTime";
+    public override string ParentPage => "PlayerCombatPage";
 
-        /// <summary>
-        /// How long a player has been alive for THIS specific life.
-        /// </summary>
-        public uint currentLifeTime;
+    private string CurrentLifeIOString => $"{Mod.Name}/CurrentLifeTime";
 
-        public override void SetStaticDefaults() {
-            statIcon = TerraTracker.GetIcon(ItemID.Heart);
-        }
-
-        public override void InitializeExtraData() {
-            currentLifeTime = 0;
-        }
-
-        public override void SaveData(TagCompound tag) {
-            base.SaveData(tag);
-
-            tag[CurrentLifeIOString] = currentLifeTime;
-        }
-
-        public override void LoadData(TagCompound tag) {
-            base.LoadData(tag);
-
-            currentLifeTime = LoadFromTag<uint>(tag, CurrentLifeIOString);
-        }
-
-        public override string DisplayStat() => TerraTracker.TicksToTimeString(theStat.uintStat);
+    public override void SetStaticDefaults() {
+        statIcon = TerraTracker.GetIcon(ItemID.Heart);
     }
+
+    public override void InitializeExtraData() {
+        currentLifeTime = 0;
+    }
+
+    public override void SaveData(TagCompound tag) {
+        base.SaveData(tag);
+
+        tag[CurrentLifeIOString] = currentLifeTime;
+    }
+
+    public override void LoadData(TagCompound tag) {
+        base.LoadData(tag);
+
+        currentLifeTime = LoadFromTag<uint>(tag, CurrentLifeIOString);
+    }
+
+    public override string DisplayStat() => TerraTracker.TicksToTimeString(theStat.uintStat);
 }

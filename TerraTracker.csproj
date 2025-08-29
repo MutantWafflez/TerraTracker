@@ -1,16 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\tModLoader.targets" />
-  
-  <PropertyGroup>
-    <DotNetPath Condition=" '$(OS)' == 'Windows_NT' ">dotnet.exe</DotNetPath>
-    <DotNetPath Condition=" '$(OS)' == 'Unix' ">dotnet/dotnet</DotNetPath>
-    <DotNetPath Condition=" '$(DotNetPath)' == '' ">dotnet/dotnet</DotNetPath>
-  </PropertyGroup>
-  
-  <PropertyGroup>
-    <AssemblyName>TerraTracker</AssemblyName>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-  <ItemGroup>
-  </ItemGroup>
+    <Import Project="..\tModLoader.targets"/>
+
+    <PropertyGroup>
+        <DotNetPath Condition=" '$(OS)' == 'Windows_NT' ">dotnet.exe</DotNetPath>
+        <DotNetPath Condition=" '$(OS)' == 'Unix' ">dotnet/dotnet</DotNetPath>
+        <DotNetPath Condition=" '$(DotNetPath)' == '' ">dotnet/dotnet</DotNetPath>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <AssemblyName>TerraTracker</AssemblyName>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
+    <ItemGroup>
+    </ItemGroup>
 </Project>

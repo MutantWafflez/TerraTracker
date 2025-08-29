@@ -1,61 +1,46 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria.GameContent.UI.Elements;
-using Terraria.Localization;
 using Terraria.UI;
 using TerraTracker.Common.ModTypes;
 
-namespace TerraTracker.Content.UI.Elements {
-    /// <summary>
-    /// Smaller element that displays its given tracking statistic.
-    /// </summary>
-    public class UITrackerElement : UIPanel {
-        private readonly TrackedStat _myStat;
+namespace TerraTracker.Content.UI.Elements; 
 
-        private UIElement _statIconRegion;
-        private UIImage _statIcon;
-        private UIText _statName;
-        private UIText _statData;
+/// <summary>
+///     Smaller element that displays its given tracking statistic.
+/// </summary>
+public class UITrackerElement : UIPanel {
+    private readonly TrackedStat _myStat;
 
-        public UITrackerElement(TrackedStat stat) {
-            _myStat = stat;
-        }
+    private UIElement _statIconRegion;
+    private UIImage _statIcon;
+    private UIText _statName;
+    private UIText _statData;
 
-        public override void OnInitialize() {
-            Width.Set(-24f, 1f);
-            Height.Set(60f, 0f);
+    public UITrackerElement(TrackedStat stat) {
+        _myStat = stat;
+    }
 
-            _statIconRegion = new UIElement {
-                VAlign = 0.5f,
-                Width = new StyleDimension(36f, 0f),
-                Height = new StyleDimension(36f, 0f)
-            };
-            _statIcon = new UIImage(_myStat.statIcon) {
-                VAlign = 0.5f,
-                HAlign = 0.5f,
-                ScaleToFit = true
-            };
+    public override void OnInitialize() {
+        Width.Set(-24f, 1f);
+        Height.Set(60f, 0f);
 
-            _statIconRegion.Append(_statIcon);
-            Append(_statIconRegion);
+        _statIconRegion = new UIElement { VAlign = 0.5f, Width = new StyleDimension(36f, 0f), Height = new StyleDimension(36f, 0f) };
+        _statIcon = new UIImage(_myStat.statIcon) { VAlign = 0.5f, HAlign = 0.5f, ScaleToFit = true };
 
-            _statName = new UIText(_myStat.StatName.GetTranslation(Language.ActiveCulture)) {
-                VAlign = 0.5f,
-                Left = new StyleDimension(_statIconRegion.Width.Pixels + 4f, 0f)
-            };
+        _statIconRegion.Append(_statIcon);
+        Append(_statIconRegion);
 
-            Append(_statName);
+        _statName = new UIText(_myStat.StatName.Value) { VAlign = 0.5f, Left = new StyleDimension(_statIconRegion.Width.Pixels + 4f, 0f) };
 
-            _statData = new UIText("0") {
-                VAlign = 0.5f,
-                HAlign = 1f
-            };
+        Append(_statName);
 
-            Append(_statData);
-        }
+        _statData = new UIText("0") { VAlign = 0.5f, HAlign = 1f };
 
-        public override void Update(GameTime gameTime) {
-            base.Update(gameTime);
-            _statData.SetText(_myStat.DisplayStat());
-        }
+        Append(_statData);
+    }
+
+    public override void Update(GameTime gameTime) {
+        base.Update(gameTime);
+        _statData.SetText(_myStat.DisplayStat());
     }
 }
