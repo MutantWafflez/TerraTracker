@@ -1,3 +1,3 @@
-ALPHA RELEASE 0.1.2.1 [To The Client Side] (August 28th, 2025)
-Changes:
-* Mod is now considered client sided, as it has no functionality for a server if it were to be installed
+ALPHA RELEASE 0.1.2.2 [The Smallest, Biggest, Bug Fix] (September 14th, 2025)
+Fixes:
+* Fixed issue in MP where player's local stats would be reset when a new player joins the server

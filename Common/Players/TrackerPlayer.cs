@@ -25,6 +25,10 @@ public class TrackerPlayer : ModPlayer {
     }
 
     public override void Initialize() {
+        if (!Main.gameMenu || Main.myPlayer != Player.whoAmI) {
+            return;
+        }
+
         foreach (TrackedStat stat in ModContent.GetContent<TrackedStat>()) {
             stat.InitializeStat();
         }
