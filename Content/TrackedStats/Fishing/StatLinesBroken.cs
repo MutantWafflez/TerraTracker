@@ -6,7 +6,7 @@ using Terraria.ID;
 using TerraTracker.Common.ModTypes;
 using Main = Terraria.Main;
 
-namespace TerraTracker.Content.TrackedStats.Fishing; 
+namespace TerraTracker.Content.TrackedStats.Fishing;
 
 /// <summary>
 ///     Tracks how many times a player has their fishing line snapped when attempting to reel in a fish.
@@ -36,7 +36,7 @@ public class StatLinesBroken : TrackedStat {
         c.Emit(OpCodes.Ldarg_0);
         c.EmitDelegate<Action<Player>>(player => {
                 if (player.whoAmI == Main.myPlayer) {
-                    theStat.uintStat++;
+                    GetCurrentStat(player).uintValue++;
                 }
             }
         );

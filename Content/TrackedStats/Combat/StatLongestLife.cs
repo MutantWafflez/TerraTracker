@@ -1,8 +1,9 @@
-﻿using Terraria.ID;
+﻿using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader.IO;
 using TerraTracker.Common.ModTypes;
 
-namespace TerraTracker.Content.TrackedStats.Combat; 
+namespace TerraTracker.Content.TrackedStats.Combat;
 
 /// <summary>
 ///     Tracks the longest time a player has stayed alive without dying in terms of game ticks.
@@ -25,17 +26,17 @@ public class StatLongestLife : TrackedStat {
         currentLifeTime = 0;
     }
 
-    public override void SaveData(TagCompound tag) {
-        base.SaveData(tag);
+    public override void SaveData(Player player, TagCompound tag) {
+        base.SaveData(player, tag);
 
         tag[CurrentLifeIOString] = currentLifeTime;
     }
 
-    public override void LoadData(TagCompound tag) {
-        base.LoadData(tag);
+    public override void LoadData(Player player, TagCompound tag) {
+        base.LoadData(player, tag);
 
         currentLifeTime = LoadFromTag<uint>(tag, CurrentLifeIOString);
     }
 
-    public override string DisplayStat() => TerraTracker.TicksToTimeString(theStat.uintStat);
+    public override string DisplayStat(Player player) => TerraTracker.TicksToTimeString(GetCurrentStat(player).uintValue);
 }

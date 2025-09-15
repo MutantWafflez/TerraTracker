@@ -13,6 +13,7 @@ using TerraTracker.Common.Systems;
 using TerraTracker.Content.TrackedStats.Combat;
 using TerraTracker.Content.TrackedStats.Movement;
 using TerraTracker.Content.TrackedStats.Social;
+using TerraTracker.DataStructures.Structs;
 
 namespace TerraTracker.Common.Players;
 
@@ -20,29 +21,32 @@ namespace TerraTracker.Common.Players;
 ///     ModPlayer that handles all tracking for player related information.
 /// </summary>
 public class TrackerPlayer : ModPlayer {
+    /// <summary>
+    ///     Dictionary that holds all of the stats for this player.
+    /// </summary>
+    public Dictionary<string, StatUnion> stats;
+
     public override void Load() {
         IL_Player.SellItem += PlayerSoldItem;
     }
 
     public override void Initialize() {
-        if (!Main.gameMenu || Main.myPlayer != Player.whoAmI) {
-            return;
-        }
+        stats = [];
 
         foreach (TrackedStat stat in ModContent.GetContent<TrackedStat>()) {
-            stat.InitializeStat();
+            stat.InitializeStat(Player);
         }
     }
 
     public override void SaveData(TagCompound tag) {
         foreach (TrackedStat stat in ModContent.GetContent<TrackedStat>()) {
-            stat.SaveData(tag);
+            stat.SaveData(Player, tag);
         }
     }
 
     public override void LoadData(TagCompound tag) {
         foreach (TrackedStat stat in ModContent.GetContent<TrackedStat>()) {
-            stat.LoadData(tag);
+            stat.LoadData(Player, tag);
         }
     }
 
@@ -61,7 +65,7 @@ public class TrackerPlayer : ModPlayer {
             return;
         }
 
-        TrackedStat.AddUInt<StatDeaths>();
+        TrackedStat.AddUInt<StatDeaths>(Player);
     }
 
     public override void OnHurt(Player.HurtInfo info) {
@@ -70,10 +74,10 @@ public class TrackerPlayer : ModPlayer {
         }
 
         ModContent.GetInstance<StatDamageBlocked>().preDefenseDamage = (uint)info.SourceDamage;
-        TrackedStat.AddUInt<StatDamageReceived>((uint)info.Damage);
+        TrackedStat.AddUInt<StatDamageReceived>(Player, (uint)info.Damage);
 
         StatDamageBlocked damageBlockStat = ModContent.GetInstance<StatDamageBlocked>();
-        damageBlockStat.theStat.uintStat += damageBlockStat.preDefenseDamage - (uint)info.Damage;
+        damageBlockStat.GetCurrentStat(Player).uintValue += damageBlockStat.preDefenseDamage - (uint)info.Damage;
     }
 
     public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone) {
@@ -89,7 +93,7 @@ public class TrackerPlayer : ModPlayer {
             return;
         }
 
-        TrackedStat.AddUInt<StatAmmoConsumed>();
+        TrackedStat.AddUInt<StatAmmoConsumed>(Player);
     }
 
     public override void PostUpdate() {
@@ -98,20 +102,20 @@ public class TrackerPlayer : ModPlayer {
         }
 
         StatLongestLife curLongestLife = ModContent.GetInstance<StatLongestLife>();
-        if (++curLongestLife.currentLifeTime > curLongestLife.theStat.uintStat) {
-            curLongestLife.theStat.uintStat = curLongestLife.currentLifeTime;
+        if (++curLongestLife.currentLifeTime > curLongestLife.GetCurrentStat(Player).uintValue) {
+            curLongestLife.GetCurrentStat(Player).uintValue = curLongestLife.currentLifeTime;
         }
 
         if (Player.justJumped) {
-            TrackedStat.AddUInt<StatJumps>();
+            TrackedStat.AddUInt<StatJumps>(Player);
         }
 
         if (Player.timeSinceLastDashStarted == 0) {
-            TrackedStat.AddUInt<StatDashes>();
+            TrackedStat.AddUInt<StatDashes>(Player);
         }
 
         if (Player.immune) {
-            TrackedStat.AddUInt<StatImmuneTime>();
+            TrackedStat.AddUInt<StatImmuneTime>(Player);
         }
 
         Vector2 velocity = Player.velocity;
@@ -120,55 +124,55 @@ public class TrackerPlayer : ModPlayer {
         }
 
         StatMaxSpeed maxSpeedStat = ModContent.GetInstance<StatMaxSpeed>();
-        if (velocity.Length() is var length && length > maxSpeedStat.theStat.floatStat) {
-            maxSpeedStat.theStat.floatStat = length;
+        if (velocity.Length() is var length && length > maxSpeedStat.GetCurrentStat(Player).doubleValue) {
+            maxSpeedStat.GetCurrentStat(Player).doubleValue = length;
         }
 
         if (velocity.Y == 0f) {
-            TrackedStat.AddFloat<StatBlocksWalked>(length / 16f);
+            TrackedStat.AddDouble<StatBlocksWalked>(Player, length / 16f);
         }
         else {
-            TrackedStat.AddFloat<StatBlocksAirborne>(length / 16f);
+            TrackedStat.AddDouble<StatBlocksAirborne>(Player, length / 16f);
 
             if (Player.gravity == 1f ? velocity.Y < 0f : velocity.Y > 0f) {
-                TrackedStat.AddFloat<StatBlocksFallen>(Math.Abs(velocity.Y / 16f));
+                TrackedStat.AddDouble<StatBlocksFallen>(Player, Math.Abs(velocity.Y / 16f));
             }
         }
     }
 
     public override void PostBuyItem(NPC vendor, Item[] shopInventory, Item item) {
         // TODO: Fix double buy?
-        TrackedStat.AddUInt<StatItemsBought>();
+        TrackedStat.AddUInt<StatItemsBought>(Player);
     }
 
     public override void PostNurseHeal(NPC nurse, int health, bool removeDebuffs, int price) {
-        TrackedStat.AddUInt<StatNurseHeals>();
+        TrackedStat.AddUInt<StatNurseHeals>(Player);
     }
 
     public override void GetDyeTraderReward(List<int> rewardPool) {
-        TrackedStat.AddUInt<StatDyeTrades>();
+        TrackedStat.AddUInt<StatDyeTrades>(Player);
     }
 
     private void AddToDamageStats(uint damage, DamageClass damageClass, bool crit) {
-        TrackedStat.AddUInt<StatDamageDealt>(damage);
+        TrackedStat.AddUInt<StatDamageDealt>(Player, damage);
         if (crit) {
-            TrackedStat.AddUInt<StatCritsDealt>();
+            TrackedStat.AddUInt<StatCritsDealt>(Player);
         }
 
         if (damageClass.CountsAsClass(DamageClass.Melee)) {
-            TrackedStat.AddUInt<StatMeleeDamageDealt>(damage);
+            TrackedStat.AddUInt<StatMeleeDamageDealt>(Player, damage);
         }
 
         if (damageClass.CountsAsClass(DamageClass.Magic)) {
-            TrackedStat.AddUInt<StatMagicDamageDealt>(damage);
+            TrackedStat.AddUInt<StatMagicDamageDealt>(Player, damage);
         }
 
         if (damageClass.CountsAsClass(DamageClass.Ranged)) {
-            TrackedStat.AddUInt<StatRangedDamageDealt>(damage);
+            TrackedStat.AddUInt<StatRangedDamageDealt>(Player, damage);
         }
 
         if (damageClass.CountsAsClass(DamageClass.Summon)) {
-            TrackedStat.AddUInt<StatSummonDamageDealt>(damage);
+            TrackedStat.AddUInt<StatSummonDamageDealt>(Player, damage);
         }
     }
 
@@ -181,13 +185,13 @@ public class TrackerPlayer : ModPlayer {
         }
 
         c.Emit(OpCodes.Ldarg_2);
-        c.EmitDelegate<Action<int>>(itemStack => TrackedStat.AddUInt<StatItemsSold>((uint)itemStack));
+        c.EmitDelegate<Action<int>>(itemStack => TrackedStat.AddUInt<StatItemsSold>(Player, (uint)itemStack));
 
         if (!c.TryGotoNext(MoveType.After, i => i.MatchStloc(6))) {
             return;
         }
 
         c.Emit(OpCodes.Ldloc_3);
-        c.EmitDelegate<Action<int>>(sellAmount => TrackedStat.AddLong<StatMoneySold>(sellAmount));
+        c.EmitDelegate<Action<int>>(sellAmount => TrackedStat.AddLong<StatMoneySold>(Player, sellAmount));
     }
 }

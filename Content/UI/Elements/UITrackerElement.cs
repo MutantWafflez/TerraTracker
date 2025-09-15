@@ -1,9 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 using TerraTracker.Common.ModTypes;
 
-namespace TerraTracker.Content.UI.Elements; 
+namespace TerraTracker.Content.UI.Elements;
 
 /// <summary>
 ///     Smaller element that displays its given tracking statistic.
@@ -41,6 +42,6 @@ public class UITrackerElement : UIPanel {
 
     public override void Update(GameTime gameTime) {
         base.Update(gameTime);
-        _statData.SetText(_myStat.DisplayStat());
+        _statData.SetText(_myStat.DisplayStat(Main.LocalPlayer));
     }
 }

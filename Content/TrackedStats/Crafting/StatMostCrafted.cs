@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -36,7 +37,7 @@ public class StatMostCrafted : TrackedStat {
         craftCounts = new Dictionary<string, uint>();
     }
 
-    public override void SaveData(TagCompound tag) {
+    public override void SaveData(Player player, TagCompound tag) {
         TagCompound dictCompound = new();
         foreach (KeyValuePair<string, uint> dictVar in craftCounts) {
             dictCompound[dictVar.Key] = dictVar.Value;
@@ -45,13 +46,13 @@ public class StatMostCrafted : TrackedStat {
         tag[FullName] = dictCompound;
     }
 
-    public override void LoadData(TagCompound tag) {
+    public override void LoadData(Player player, TagCompound tag) {
         foreach (KeyValuePair<string, object> pair in tag.GetCompound(FullName)) {
             craftCounts[pair.Key] = (uint)Convert.ChangeType(pair.Value, typeof(uint))!;
         }
     }
 
-    public override string DisplayStat() {
+    public override string DisplayStat(Player player) {
         if (!craftCounts.Any()) {
             return nothingCrafted.Value;
         }

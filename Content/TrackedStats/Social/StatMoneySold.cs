@@ -1,7 +1,8 @@
-﻿using Terraria.ModLoader.IO;
+﻿using Terraria;
+using Terraria.ModLoader.IO;
 using TerraTracker.Common.ModTypes;
 
-namespace TerraTracker.Content.TrackedStats.Social; 
+namespace TerraTracker.Content.TrackedStats.Social;
 
 /// <summary>
 ///     Tracks how much money a player has earned by selling items to NPCs.
@@ -13,13 +14,13 @@ public class StatMoneySold : TrackedStat {
         statIcon = TerraTracker.GetIcon(TerraTracker.StatIconPath + "MoneySold");
     }
 
-    public override void SaveData(TagCompound tag) {
-        tag[FullName] = theStat.longStat;
+    public override void SaveData(Player player, TagCompound tag) {
+        tag[FullName] = GetCurrentStat(player).longValue;
     }
 
-    public override void LoadData(TagCompound tag) {
-        theStat.longStat = LoadFromTag<long>(tag);
+    public override void LoadData(Player player, TagCompound tag) {
+        GetCurrentStat(player).longValue = LoadFromTag<long>(tag);
     }
 
-    public override string DisplayStat() => TerraTracker.DefaultCoinsRepresentation(theStat.longStat);
+    public override string DisplayStat(Player player) => TerraTracker.DefaultCoinsRepresentation(GetCurrentStat(player).longValue);
 }

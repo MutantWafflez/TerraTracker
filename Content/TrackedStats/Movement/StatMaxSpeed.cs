@@ -1,8 +1,9 @@
-﻿using Terraria.ID;
+﻿using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader.IO;
 using TerraTracker.Common.ModTypes;
 
-namespace TerraTracker.Content.TrackedStats.Movement; 
+namespace TerraTracker.Content.TrackedStats.Movement;
 
 /// <summary>
 ///     Tracks the highest speed a player has ever achieved.
@@ -14,13 +15,13 @@ public class StatMaxSpeed : TrackedStat {
         statIcon = TerraTracker.GetIcon(ItemID.LightningBoots);
     }
 
-    public override void SaveData(TagCompound tag) {
-        tag[FullName] = theStat.floatStat;
+    public override void SaveData(Player player, TagCompound tag) {
+        tag[FullName] = GetCurrentStat(player).doubleValue;
     }
 
-    public override void LoadData(TagCompound tag) {
-        theStat.floatStat = LoadFromTag<float>(tag);
+    public override void LoadData(Player player, TagCompound tag) {
+        GetCurrentStat(player).doubleValue = LoadFromTag<float>(tag);
     }
 
-    public override string DisplayStat() => TerraTracker.DefaultDecimalRepresentation(theStat.floatStat * 60f / 16f);
+    public override string DisplayStat(Player player) => TerraTracker.DefaultDecimalRepresentation(GetCurrentStat(player).doubleValue * 60d / 16d);
 }

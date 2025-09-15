@@ -1,7 +1,8 @@
-﻿using Terraria.ID;
+﻿using Terraria;
+using Terraria.ID;
 using TerraTracker.Common.ModTypes;
 
-namespace TerraTracker.Content.TrackedStats.Combat; 
+namespace TerraTracker.Content.TrackedStats.Combat;
 
 /// <summary>
 ///     Tracks how long a player has been immune in terms of game ticks.
@@ -13,5 +14,5 @@ public class StatImmuneTime : TrackedStat {
         statIcon = TerraTracker.GetIcon(ItemID.CrossNecklace);
     }
 
-    public override string DisplayStat() => TerraTracker.TicksToTimeString(theStat.uintStat);
+    public override string DisplayStat(Player player) => TerraTracker.TicksToTimeString(GetCurrentStat(player).uintValue);
 }

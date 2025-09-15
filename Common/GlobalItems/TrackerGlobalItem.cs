@@ -8,7 +8,7 @@ using TerraTracker.Content.TrackedStats.Crafting;
 using TerraTracker.Content.TrackedStats.Fishing;
 using TerraTracker.Content.TrackedStats.Social;
 
-namespace TerraTracker.Common.GlobalItems; 
+namespace TerraTracker.Common.GlobalItems;
 
 /// <summary>
 ///     Global Item that handles item statistic tracking.
@@ -20,11 +20,11 @@ public class TrackerGlobalItem : GlobalItem {
         }
 
         if (item.healLife > 0) {
-            TrackedStat.AddUInt<StatHealingItemsConsumed>();
+            TrackedStat.AddUInt<StatHealingItemsConsumed>(player);
         }
 
         if (item.healMana > 0) {
-            TrackedStat.AddUInt<StatManaItemsConsumed>();
+            TrackedStat.AddUInt<StatManaItemsConsumed>(player);
         }
 
         if (item.buffType <= 0) {
@@ -32,10 +32,10 @@ public class TrackerGlobalItem : GlobalItem {
         }
 
         if (ItemID.Sets.IsFood[item.type]) {
-            TrackedStat.AddUInt<StatFoodsConsumed>();
+            TrackedStat.AddUInt<StatFoodsConsumed>(player);
         }
 
-        TrackedStat.AddUInt<StatBuffItemsConsumed>();
+        TrackedStat.AddUInt<StatBuffItemsConsumed>(player);
 
         return base.ConsumeItem(item, player);
     }
@@ -47,7 +47,7 @@ public class TrackerGlobalItem : GlobalItem {
 
         Item createItem = recipeContext.Recipe.createItem;
 
-        TrackedStat.AddUInt<StatCraftCount>((uint)createItem.stack);
+        TrackedStat.AddUInt<StatCraftCount>(Main.LocalPlayer, (uint)createItem.stack);
 
         StatMostCrafted mostCraftedStat = ModContent.GetInstance<StatMostCrafted>();
         string craftKey = createItem.ModItem is null ? createItem.type.ToString() : createItem.ModItem.FullName;
@@ -56,7 +56,7 @@ public class TrackerGlobalItem : GlobalItem {
         }
 
         if (createItem.buffTime > 0) {
-            TrackedStat.AddUInt<StatBuffCraftCount>((uint)createItem.stack);
+            TrackedStat.AddUInt<StatBuffCraftCount>(Main.LocalPlayer, (uint)createItem.stack);
         }
     }
 
@@ -74,28 +74,28 @@ public class TrackerGlobalItem : GlobalItem {
         };
         value *= item.stack;
 
-        TrackedStat.AddLong<StatTaxesCollected>(value);
+        TrackedStat.AddLong<StatTaxesCollected>(Main.LocalPlayer, value);
     }
 
     public override void CaughtFishStack(int type, ref int stack) {
         Item caughtItem = new(type);
 
-        TrackedStat.AddUInt<StatThingsCaught>();
+        TrackedStat.AddUInt<StatThingsCaught>(Main.LocalPlayer);
 
         if (ItemID.Sets.IsFishingCrate[caughtItem.type] || ItemID.Sets.IsFishingCrateHardmode[caughtItem.type]) {
-            TrackedStat.AddUInt<StatCratesCaught>();
+            TrackedStat.AddUInt<StatCratesCaught>(Main.LocalPlayer);
         }
 
         if (caughtItem.rare == ItemRarityID.Gray) {
-            TrackedStat.AddUInt<StatTrashCaught>();
+            TrackedStat.AddUInt<StatTrashCaught>(Main.LocalPlayer);
         }
 
         if (caughtItem.questItem) {
-            TrackedStat.AddUInt<StatQuestFishCaught>();
+            TrackedStat.AddUInt<StatQuestFishCaught>(Main.LocalPlayer);
         }
     }
 
     public override void PostReforge(Item item) {
-        TrackedStat.AddUInt<StatReforges>();
+        TrackedStat.AddUInt<StatReforges>(Main.LocalPlayer);
     }
 }

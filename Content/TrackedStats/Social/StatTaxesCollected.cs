@@ -1,8 +1,9 @@
-﻿using Terraria.ID;
+﻿using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader.IO;
 using TerraTracker.Common.ModTypes;
 
-namespace TerraTracker.Content.TrackedStats.Social; 
+namespace TerraTracker.Content.TrackedStats.Social;
 
 /// <summary>
 ///     Tracks how much money a player has collected from the tax collector.
@@ -14,13 +15,13 @@ public class StatTaxesCollected : TrackedStat {
         statIcon = TerraTracker.GetIcon("Terraria/Images/NPC_Head_" + NPCHeadID.TaxCollector);
     }
 
-    public override void SaveData(TagCompound tag) {
-        tag[FullName] = theStat.longStat;
+    public override void SaveData(Player player, TagCompound tag) {
+        tag[FullName] = GetCurrentStat(player).longValue;
     }
 
-    public override void LoadData(TagCompound tag) {
-        theStat.longStat = LoadFromTag<long>(tag);
+    public override void LoadData(Player player, TagCompound tag) {
+        GetCurrentStat(player).longValue = LoadFromTag<long>(tag);
     }
 
-    public override string DisplayStat() => TerraTracker.DefaultCoinsRepresentation(theStat.longStat);
+    public override string DisplayStat(Player player) => TerraTracker.DefaultCoinsRepresentation(GetCurrentStat(player).longValue);
 }

@@ -26,7 +26,7 @@ public class StatDodges : TrackedStat {
         orig(self, time);
 
         if (Main.myPlayer == self.whoAmI) {
-            theStat.uintStat++;
+            GetCurrentStat(self).uintValue++;
         }
     }
 }

@@ -10,6 +10,6 @@ namespace TerraTracker.Common.GlobalTiles;
 /// </summary>
 public class TrackerGlobalTile : GlobalTile {
     public override void PlaceInWorld(int i, int j, int type, Item item) {
-        TrackedStat.AddUInt<StatBlocksPlaced>();
+        TrackedStat.AddUInt<StatBlocksPlaced>(Main.LocalPlayer);
     }
 }

@@ -2,11 +2,13 @@
 using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using TerraTracker.Common.Players;
 using TerraTracker.Content.UI.Elements;
+using TerraTracker.DataStructures.Structs;
 
 namespace TerraTracker.Common.ModTypes;
 
@@ -15,27 +17,6 @@ namespace TerraTracker.Common.ModTypes;
 ///     the class has all data properly initialized.
 /// </summary>
 public abstract class TrackedStat : ModType {
-    /// <summary>
-    ///     "Union" (see C/C++ unions) type that will be used to hold stat data of any one of the applicable types defined in the
-    ///     struct.
-    /// </summary>
-    [StructLayout(LayoutKind.Explicit)]
-    public struct StatUnion {
-        [FieldOffset(0)]
-        public uint uintStat;
-
-        [FieldOffset(0)]
-        public float floatStat;
-
-        [FieldOffset(0)]
-        public long longStat;
-    }
-
-    /// <summary>
-    ///     Field containing the actual data being tracked.
-    /// </summary>
-    public StatUnion theStat;
-
     /// <summary>
     ///     The icon texture to be displayed to the side of the stat name. Defaults to the "?" icon.
     /// </summary>
@@ -57,32 +38,37 @@ public abstract class TrackedStat : ModType {
     ///     Adds the specified increment value to the <see cref="uint" /> representation
     ///     of this stat.
     /// </summary>
-    public static void AddUInt<T>(uint increment = 1)
-        where T : TrackedStat {
-        ModContent.GetInstance<T>().theStat.uintStat += increment;
+    public static void AddUInt<T>(Player player, uint increment = 1) where T : TrackedStat {
+        ModContent.GetInstance<T>().GetCurrentStat(player).uintValue += increment;
     }
 
     /// <summary>
     ///     Adds the specified increment value to the <see cref="float" /> representation
     ///     of this stat.
     /// </summary>
-    public static void AddFloat<T>(float increment = 1f)
-        where T : TrackedStat {
-        ModContent.GetInstance<T>().theStat.floatStat += increment;
+    public static void AddFloat<T>(Player player, float increment = 1f) where T : TrackedStat {
+        ModContent.GetInstance<T>().GetCurrentStat(player).floatValue += increment;
+    }
+
+    /// <summary>
+    ///     Adds the specified increment value to the <see cref="double" /> representation
+    ///     of this stat.
+    /// </summary>
+    public static void AddDouble<T>(Player player, double increment = 1d) where T : TrackedStat {
+        ModContent.GetInstance<T>().GetCurrentStat(player).doubleValue += increment;
     }
 
     /// <summary>
     ///     Adds the specified increment value to the <see cref="long" /> representation
     ///     of this stat.
     /// </summary>
-    public static void AddLong<T>(long increment = 1)
-        where T : TrackedStat {
-        ModContent.GetInstance<T>().theStat.longStat += increment;
+    public static void AddLong<T>(Player player, long increment = 1) where T : TrackedStat {
+        ModContent.GetInstance<T>().GetCurrentStat(player).longValue += increment;
     }
 
     /// <summary>
     ///     Called after default initialization has occurred in <see cref="InitializeStat" />. Use this to initialize
-    ///     any extra data or data structures beyond the <see cref="theStat" /> field.
+    ///     any extra data or data structures beyond the <see cref="GetCurrentStat" /> return stat.
     /// </summary>
     public virtual void InitializeExtraData() { }
 
@@ -90,23 +76,23 @@ public abstract class TrackedStat : ModType {
     ///     Save stat data to the <paramref name="tag" /> parameter. Defaults
     ///     to saving the data as its <see cref="uint" /> representation.
     /// </summary>
-    public virtual void SaveData(TagCompound tag) {
-        tag[FullName] = theStat.uintStat;
+    public virtual void SaveData(Player player, TagCompound tag) {
+        tag[FullName] = GetCurrentStat(player).uintValue;
     }
 
     /// <summary>
     ///     Load stat data from the <paramref name="tag" /> parameter. Defaults
     ///     to loading the data as its <see cref="uint" /> representation.
     /// </summary>
-    public virtual void LoadData(TagCompound tag) {
-        theStat.uintStat = LoadFromTag<uint>(tag);
+    public virtual void LoadData(Player player, TagCompound tag) {
+        GetCurrentStat(player).uintValue = LoadFromTag<uint>(tag);
     }
 
     /// <summary>
     ///     Returns the string representation of the stat being tracked within this class. Defaults
     ///     to displaying the <see cref="uint" /> representation of the data.
     /// </summary>
-    public virtual string DisplayStat() => TerraTracker.DefaultIntegerRepresentation(theStat.uintStat);
+    public virtual string DisplayStat(Player player) => TerraTracker.DefaultIntegerRepresentation(GetCurrentStat(player).uintValue);
 
     public sealed override void SetupContent() => SetStaticDefaults();
 
@@ -122,9 +108,8 @@ public abstract class TrackedStat : ModType {
     ///     Called by the corresponding save handler (<see cref="TrackerPlayer" /> for player stats, for example) to
     ///     initialize this stat to its default
     /// </summary>
-    public void InitializeStat() {
-        // Guarantees that the entire union is reset to 0 (since long is the largest data type).
-        theStat.longStat = 0;
+    public void InitializeStat(Player player) {
+        player.GetModPlayer<TrackerPlayer>().stats[FullName] = new StatUnion();
 
         InitializeExtraData();
     }
@@ -132,12 +117,16 @@ public abstract class TrackedStat : ModType {
     /// <summary>
     ///     Loads the specified type for this class into the stat struct.
     /// </summary>
-    public T LoadFromTag<T>(TagCompound tag, string tagKey = null)
-        where T : struct {
+    public T LoadFromTag<T>(TagCompound tag, string tagKey = null) where T : struct {
         if (!tag.ContainsKey(tagKey ??= FullName)) {
             return default(T);
         }
 
         return (T)Convert.ChangeType(tag[tagKey], typeof(T))!;
     }
+
+    /// <summary>
+    ///     Gets a reference to the <see cref="StatUnion" /> related to this stat and player.
+    /// </summary>
+    public ref StatUnion GetCurrentStat(Player player) => ref CollectionsMarshal.GetValueRefOrNullRef(player.GetModPlayer<TrackerPlayer>().stats, FullName);
 }

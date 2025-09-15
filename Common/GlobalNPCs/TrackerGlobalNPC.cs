@@ -6,7 +6,7 @@ using TerraTracker.Common.ModTypes;
 using TerraTracker.Content.TrackedStats.Fishing;
 using TerraTracker.Content.TrackedStats.Social;
 
-namespace TerraTracker.Common.GlobalNPCs; 
+namespace TerraTracker.Common.GlobalNPCs;
 
 /// <summary>
 ///     GlobalNPC that handles npc-related data tracking.
@@ -21,12 +21,13 @@ public class TrackerGlobalNPC : GlobalNPC {
             return;
         }
 
-        TrackedStat.AddUInt<StatEnemiesCaught>();
-        TrackedStat.AddUInt<StatThingsCaught>();
+        // TODO: Fix enemy catches in MP
+        TrackedStat.AddUInt<StatEnemiesCaught>(Main.LocalPlayer);
+        TrackedStat.AddUInt<StatThingsCaught>(Main.LocalPlayer);
     }
 
     public override void GetChat(NPC npc, ref string chat) {
         // Method is only called when first chatting with an NPC, thus:
-        TrackedStat.AddUInt<StatNPCChats>();
+        TrackedStat.AddUInt<StatNPCChats>(Main.LocalPlayer);
     }
 }

@@ -20,21 +20,21 @@ public class StatMoneySpent : TrackedStat {
         statIcon = TerraTracker.GetIcon(TerraTracker.StatIconPath + "MoneySpent");
     }
 
-    public override void SaveData(TagCompound tag) {
-        tag[FullName] = theStat.longStat;
+    public override void SaveData(Player player, TagCompound tag) {
+        tag[FullName] = GetCurrentStat(player).longValue;
     }
 
-    public override void LoadData(TagCompound tag) {
-        theStat.longStat = LoadFromTag<long>(tag);
+    public override void LoadData(Player player, TagCompound tag) {
+        GetCurrentStat(player).longValue = LoadFromTag<long>(tag);
     }
 
-    public override string DisplayStat() => TerraTracker.DefaultCoinsRepresentation(theStat.longStat);
+    public override string DisplayStat(Player player) => TerraTracker.DefaultCoinsRepresentation(GetCurrentStat(player).longValue);
 
     private bool PlayerSpentMoney(On_Player.orig_BuyItem orig, Player self, long price, int customCurrency) {
         bool returnValue = orig(self, price, customCurrency);
 
         if (returnValue) {
-            theStat.longStat += price;
+            GetCurrentStat(self).longValue += price;
         }
 
         return returnValue;

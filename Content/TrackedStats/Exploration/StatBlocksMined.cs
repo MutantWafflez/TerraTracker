@@ -1,4 +1,5 @@
-﻿using Terraria.GameContent.Achievements;
+﻿using Terraria;
+using Terraria.GameContent.Achievements;
 using Terraria.ID;
 using TerraTracker.Common.ModTypes;
 
@@ -23,6 +24,6 @@ public class StatBlocksMined : TrackedStat {
     private void OnTileMined(On_AchievementsHelper.orig_HandleMining orig) {
         orig();
 
-        theStat.uintStat++;
+        GetCurrentStat(Main.LocalPlayer).uintValue++;
     }
 }
