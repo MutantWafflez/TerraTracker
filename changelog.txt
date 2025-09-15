@@ -1,3 +1,4 @@
-ALPHA RELEASE 0.1.2.2 [The Smallest, Biggest, Bug Fix] (September 14th, 2025)
-Fixes:
-* Fixed issue in MP where player's local stats would be reset when a new player joins the server
+ALPHA RELEASE 0.1.2.3 [A Rewritten Delight] (September 14th, 2025)
+Changes:
+* Rewrote a lot of internal code to fix a nasty bit of technical debt that caused stats to persist across different players
+	-> To be more precise, if you had multiple players on the selection screen, they would have their stats be overwritten by whatever player was last in the list
