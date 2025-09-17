@@ -185,13 +185,13 @@ public class TrackerPlayer : ModPlayer {
         }
 
         c.Emit(OpCodes.Ldarg_2);
-        c.EmitDelegate<Action<int>>(itemStack => TrackedStat.AddUInt<StatItemsSold>(Player, (uint)itemStack));
+        c.EmitDelegate<Action<int>>(itemStack => TrackedStat.AddUInt<StatItemsSold>(Main.LocalPlayer, (uint)itemStack));
 
         if (!c.TryGotoNext(MoveType.After, i => i.MatchStloc(6))) {
             return;
         }
 
         c.Emit(OpCodes.Ldloc_3);
-        c.EmitDelegate<Action<int>>(sellAmount => TrackedStat.AddLong<StatMoneySold>(Player, sellAmount));
+        c.EmitDelegate<Action<int>>(sellAmount => TrackedStat.AddLong<StatMoneySold>(Main.LocalPlayer, sellAmount));
     }
 }

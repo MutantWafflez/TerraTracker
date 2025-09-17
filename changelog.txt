@@ -1,4 +1,3 @@
-ALPHA RELEASE 0.1.2.3 [A Rewritten Delight] (September 14th, 2025)
-Changes:
-* Rewrote a lot of internal code to fix a nasty bit of technical debt that caused stats to persist across different players
-	-> To be more precise, if you had multiple players on the selection screen, they would have their stats be overwritten by whatever player was last in the list
+ALPHA RELEASE 0.1.2.4 [Please Just Let Me Sell This] (September 16th, 2025)
+Fixes:
+* Fixed issue from most recent rewrite that prevented players from selling items to NPCs
